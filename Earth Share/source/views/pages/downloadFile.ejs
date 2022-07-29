@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!--Header-->
+		<%- include('../include/header') %>
+		<title>Download Page</title>
+		<style>
+			.wrapper {
+                max-width: 1000px;
+                min-height: 300px;
+				margin: 10% auto 10% auto;
+                padding: 40px 30px 30px 30px;
+                background-color: #ecf0f3;
+                border-radius: 25px;
+				box-shadow: 3px 3px 3px #b1b1b1, -3px -3px 3px #fff;
+				color: black;
+				
+            }
+			@media(max-width: 1000px) {
+                .wrapper {
+                    margin: 30px 20px;
+                    padding: 40px 15px 15px 15px
+                }
+            }
+			/* @media(max-width: 2500px) {
+				.wrapper1 {
+                    margin: 30px 20px;
+                    padding: 40px 15px 15px 15px
+                }
+            } */
+		</style>
+		<link rel="stylesheet" type="text/css" href="../../css/main.css">
+		<link rel="stylesheet" type="text/css" href="../../css/util.css">
+		<!--===============================================================================================-->
+	</head>
+	<body>
+		<div id="page-container">
+			<div id="content-wrap">
+				</br>
+				<% if(msgs.length){%>
+                    <div style="position: fixed; right: 0px;" id="msgalert">
+                        <% if(msgs.toString().search("failed") !== -1){%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-danger alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%} else{%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-success alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%}%>
+                    </div>
+                <%}%>
+                </br>
+
+				<div>
+					<div class="wrapper">
+						<center>
+							<div class="row">
+								<h3><b>File Details</b></h3>
+							</div>
+						</center>
+						</br>
+						<div class="row">
+							<div class="col" style="border-right:1px dashed #000;height:auto;">
+								<div class="row">
+									<div class="col">
+										<center>
+											<i id="thumbnail" style="font-size: 120px; color: black;"></i>
+											</br>
+											</br>
+											<label id="filename" class="fs-25" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= filedata.fileName%>"></label>
+										</center>
+									</div>
+								</div>
+								</br>
+								<div class="row">
+									<div class="col">
+										<center>
+											<% if(filedata.fileStatus !== "Active"){ %>
+												<a>
+													<button class="btn btn-primary btn-shadow" type="button" disabled>
+														<span class="fa fa-download"></span>
+														Download
+													</button>
+												</a>
+												<% } else{ %>  
+													<a href="/download/file/id=<%= filedata.fileHash%>" id="link">
+														<button class="btn btn-primary btn-shadow" type="button">
+															<span class="fa fa-download"></span>
+															Download
+														</button>
+													</a>
+											<% } %>
+										</center>
+									</div>
+									<div class="col">
+										<%- include('../partials/blockingRequestModel') %>
+										<center> 
+											<% if(filedata.fileStatus === "Active"){ %>
+												<button id="reqbtn" type="submit" class="btn btn-danger btn-shadow" data-bs-target="#blockingRequestModel" data-bs-toggle="modal">
+													<span class="fa fa-ban"></span>
+													Block File
+												</button>
+												<% } else{ %> 
+													<button id="reqbtn" type="submit" class="btn btn-success btn-shadow" data-bs-target="#blockingRequestModel" data-bs-toggle="modal">
+														<span class="fa fa-check-circle"></span>
+														Activate File
+													</button> 
+											<% } %>
+										</center>
+									</div>
+								</div>
+							</div>
+							<div class="col" style="border-left:1px dashed #000; height:auto;">
+								<div class="row">
+									<div class="col"><h5><i>File size:</i></h5></div>
+									<div class="col"><h4 id="filesize"></h4></div>
+								</div>
+								</br>
+								<div class="row" >
+									<div class="col"><h5><i>File status:</i></h5></div>
+									<div class="col">
+										<% if(filedata.fileStatus !== "Active"){ %>
+											<h4 style="color: red;"><%= filedata.fileStatus%></h4>
+											<% } else{ %>  
+												<h4 style="color: green;"><%= filedata.fileStatus%></h4>
+										<% } %>
+									</div>
+								</div>
+								</br>
+								<div class="row" >
+									<div class="col"><h5><i>Uploaded by:</i></h5></div>
+									<div class="col"><h4><%= filedata.uploadBy%></h4></div>
+								</div>
+								</br>
+								<div class="row" >
+									<div class="col"><h5><i>Uploaded on:</i></h5></div>
+									<div class="col"><h4 id="uploadDate"></h4></div>
+								</div>
+								</br>
+								<div class="row" >
+									<div class="col"><h5><i>Uploaded at:</i></h5></div>
+									<div class="col"><h4 id="uploadTime"></h4></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Footer-->
+			<%- include('../include/footer') %> 
+		</div>
+		<script>
+			window.onload = function(){
+            	const formatBytes = (bytes, decimals = 2) => {
+					if (bytes === 0) {
+						return '0 Bytes';
+					}
+					const k = 1024;
+					const dm = decimals < 0 ? 0 : decimals;
+					const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+					const i = Math.floor(Math.log(bytes) / Math.log(k));
+					return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+				}
+				var timestamp = '<%= filedata.uploadDateTime%>'
+				var date = new Date(timestamp);
+				var upDate = date.getDate()+"."+(date.getMonth()+1)+"."+date.getFullYear();
+				var upTime = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+				document.getElementById('filesize').innerHTML = formatBytes(parseInt('<%= filedata.fileSize%>'));
+				document.getElementById('uploadDate').innerHTML = upDate;
+				document.getElementById('uploadTime').innerHTML = upTime;
+				document.getElementById('reqtype').value = document.getElementById('reqbtn').innerText.split(" ")[1];
+				
+				var fileName = '<%= filedata.fileName%>'
+				let splitName = fileName.split('.');
+				if(splitName[0].length > 16){ //if file name length is greater than 12 then split it and add ...
+					fileName = splitName[0].substring(0, 16) + "... ." + splitName[1];
+				}
+				document.getElementById('filename').innerHTML = fileName;
+
+				getthumbnail(splitName[1]);
+
+                function getthumbnail(extn){
+                    var mclass;
+					const videos = ['WEBM','MPG','MP2','MPEG','MPE','MPV','OGG','MP4','M4P','M4V','AVI','WMV','MOV','QT','FLV','SWF','AVCHD'];
+					const images = ['JPG','PNG','GIF','WEBP','TIFF','PSD','RAW','BMP','HEIF','INDD'];
+                    const ppts 	 = ['ppt','pot','pps','ppa','ppam','pptx','pptm','potx','potm','ppam','ppsx','ppsm','sldx','sldm','pa'];
+                    const excels = ['xls','xlt','xlm','xll_','xla_','xla5','xla8','xlsx','xlsm','xltx','xltm','xlsb','xla','xlam','xll','xlw'];
+                    const words  = ['doc','dot','wbk','docx','docm','dotx','dotm','docb','wll','wwl'];
+                    const audios = ['3gp','aa','aac','aax','act','aiff','alac','amr','ape','au','awb','dss','dvf','flac','gsm','iklax','ivs','m4a',
+                                    'm4b','m4p','mmf','mp3','mpc','msv','nmf','ogg','oga','mogg','opus','ra','rm','raw','rf64','sln','tta','voc','vox','wav','wma','wv','webm','8svx','cda'];
+
+					if(splitName[1].toUpperCase() === 'TXT') {
+						mclass = 'fa fa-file-text';
+					} else if(splitName[1].toUpperCase() === 'PDF') {
+						mclass = 'fa fa-file-pdf-o';
+					} else if(splitName[1].toUpperCase() === 'ZIP') {
+						mclass = 'fa fa-file-archive-o';
+					} else if(videos.indexOf(splitName[1].toUpperCase()) !== -1 ){
+						mclass = 'fa fa-file-video-o';
+					} else if(audios.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-audio-o';
+					} else if(images.indexOf(splitName[1].toUpperCase()) !== -1 ){
+						mclass = 'fa fa-file-image-o';
+					} else if(ppts.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-powerpoint-o';
+					} else if(excels.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-excel-o';
+					} else if(words.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-word-o';
+					} else{
+						mclass = 'fa fa-file';
+					}
+                    document.getElementById('thumbnail').setAttribute('class', mclass);
+                }
+
+				var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+        	}
+		</script>
+	</body>
+</html>

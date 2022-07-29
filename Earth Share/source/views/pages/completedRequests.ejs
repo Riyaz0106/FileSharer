@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %> 
+        <title>Completed Requests Page</title>
+        <link rel="stylesheet" type="text/css" href="../../css/main.css">
+        <link rel="stylesheet" type="text/css" href="../../css/util.css">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <!-- Top Navigation Bar -->
+                <%- include('../partials/adminNavbar') %>
+                </br>
+                </br>
+                <div class="container-fluid">
+                    <!-- View Films-->
+                    <%- include('../partials/viewCompletedrequests') %>
+                </div>
+            </div>
+        <!--Footer-->
+        <%- include('../include/footer') %>
+        </div>
+        <script text=javascript>
+            window.onload = function(){
+                document.getElementById("navbarColor01").style.visibility = "visible";
+                document.getElementById('linkpendreq').className = 'nav-link';
+                document.getElementById('linkhome').className = 'nav-link';
+                document.getElementById('linkcomreq').className = 'nav-link active';
+
+                footLink = document.getElementById("mlink");
+                footLink.href = "/admin/pendingRequests";
+                footLink.innerHTML = 'Pending Requests';
+
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            }
+        </script>
+    </body>
+</html>

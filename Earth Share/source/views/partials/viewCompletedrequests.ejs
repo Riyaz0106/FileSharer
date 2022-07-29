@@ -1,0 +1,73 @@
+<div class="row row-cols-auto">
+    <% if(reqData.length){
+		reqData.forEach(function(row){ 
+			var fileName = row["fileName"];
+			let splitName = fileName.split('.');
+            if(splitName[0].length > 10){ //if file name length is greater than 15 then split it and add ...
+                fileName = splitName[0].substring(0, 10) + "... ." + splitName[1];
+            }%>
+      	<div class="col">
+        	<!--Film Cards-->
+          	<div class="card btn-shadow bg-dark w-auto">
+            	<div class="card-header">
+					<center>
+						<%	const videos = ['WEBM','MPG','MP2','MPEG','MPE','MPV','OGG','MP4','M4P','M4V','AVI','WMV','MOV','QT','FLV','SWF','AVCHD'];
+							const images = ['JPG','PNG','GIF','WEBP','TIFF','PSD','RAW','BMP','HEIF','INDD'];
+							const ppts = ['ppt','pot','pps','ppa','ppam','pptx','pptm','potx','potm','ppam','ppsx','ppsm','sldx','sldm','pa'];
+							const excels = ['xls','xlt','xlm','xll_','xla_','xla5','xla8','xlsx','xlsm','xltx','xltm','xlsb','xla','xlam','xll','xlw','.csv'];
+							const words = ['doc','dot','wbk','docx','docm','dotx','dotm','docb','wll','wwl'];
+							const audios = ['3gp','aa','aac','aax','act','aiff','alac','amr','ape','au','awb','dss','dvf','flac','gsm','iklax','ivs','m4a',
+											'm4b','m4p','mmf','mp3','mpc','msv','nmf','ogg','oga','mogg','opus','ra','rm','raw','rf64','sln','tta','voc','vox','wav','wma','wv','webm','8svx','cda'];
+
+								if(splitName[1].toUpperCase() === 'TXT') { %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-text"></i>
+							<%	} else if(splitName[1].toUpperCase() === 'PDF') { %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-pdf-o"></i>
+							<%	} else if(splitName[1].toUpperCase() === 'ZIP') { %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-archive-o"></i>
+							<%	} else if(videos.indexOf(splitName[1].toUpperCase()) !== -1 ){ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-video-o"></i>
+							<%	} else if(audios.indexOf(splitName[1]) !== -1 ){ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-audio-o"></i>
+							<%	} else if(images.indexOf(splitName[1].toUpperCase()) !== -1 ){ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-image-o"></i>
+							<%	} else if(ppts.indexOf(splitName[1]) !== -1 ){ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-powerpoint-o"></i>
+							<%	} else if(excels.indexOf(splitName[1]) !== -1 ){ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-excel-o"></i>
+							<%	} else if(words.indexOf(splitName[1]) !== -1 ){ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file-word-o"></i>
+							<%	}else{ %>
+									<i id="thumbnail" style="font-size: 150px; color: white;" class="fa fa-file"></i>
+							<%	} %>
+					</center>
+            	</div>
+            	<div class="card-body">
+                	<h5 class="card-title" style="color:burlywood;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%=row['fileName']%>"><%= fileName %></h5>
+                	<p class="card-text text-white"><i style="color: rgb(0, 213, 255);">Uploaded by: </i><%= row["uploadBy"] %></p>
+					<p class="card-text text-white"><i style="color: rgb(0, 213, 255);">Request to: </i><%= row["reqType"] %></p>
+					</br>
+					<a href='/admin/requests/details/id=<%=row["fileHash"]%>?reqStatus=<%=row["reqStatus"]%>&reqType=<%=row["reqType"]%>' class="text-decoration-none" style="color: yellow;">
+						View Details
+					</a>
+            	</div>
+				<div class="card-footer bg-transparent">
+					<div class="row">
+						<div class="col-auto me-auto">
+							<p style="color: rgb(0, 213, 255);">Status:</p>
+							<% if(row["reqStatus"] === "Approved"){%>
+								<p>Request has been <i style="color: lightgreen;">Approved</i><p>
+							<%} else{%>
+								<p>Request has been <i style="color: red;">Declined</i></p>
+							<%}%>
+						</div>
+					</div>	
+				</div>
+          	</div>
+          	</br>
+      	</div>
+    <% }) 
+    } else{ %>
+		<h4 style="margin: auto;">No requests available.</h4>
+    <%} %>
+  </div>

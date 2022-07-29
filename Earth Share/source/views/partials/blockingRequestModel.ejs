@@ -1,0 +1,46 @@
+<div class="modal fade" id="blockingRequestModel" aria-hidden="true" aria-labelledby="blockingRequestModelLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg modal-fullscreen-lg-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="blockingRequestModelLabel">
+            <% if(filedata.fileStatus === "Active"){ %>
+                Request File Blocking Details
+                <% } else{ %>  
+                    Request File UnBlocking Details
+            <% } %>
+        </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="blockingRequestform" role="form" method="POST" action="/block/file/id=<%= filedata.fileHash%>">
+                <div class="form-group">
+                    <label for="userName" class="control-label">Name</label>
+                    <div>
+                        <% if(user !== 'admin'){ %>
+                            <input type="text" class="form-control input-lg" name="userName" value="<%= user%>" readonly="true">
+                        <% } else{ %>
+                            <input type="text" class="form-control input-lg" name="userName" value=" " required>
+                        <% } %>
+                    </div>
+                </div>
+                </br>
+                <div class="form-group">
+                    <label for="blockReason" class="form-label">Reason</label>
+                    <div>
+                        <textarea class="form-control" name="blockReason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="reqtype" type="text" class="form-control input-lg" name="reqtype" value=" " hidden>
+                </div>
+                </br>
+                </br>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-shadow" data-bs-dismiss="modal">Clear</button>
+            <button type="submit" form="blockingRequestform" class="btn btn-primary  btn-success btn-shadow">Send</button>
+        </div>
+      </div>
+    </div>
+</div>

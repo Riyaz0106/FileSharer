@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %>
+        <title>Login Page</title>
+        <style>
+            .wrapper {
+                max-width: 800px;
+                min-height: 500px;
+                margin: 80px auto;
+                padding: 40px 30px 30px 30px;
+                background-color: #ecf0f3;
+                border-radius: 15px;
+                box-shadow: 13px 13px 20px #071b3c, -13px -13px 20px #071b3c
+            }
+            .logo {
+                width: 80px;
+                margin: auto
+            }
+
+            .logo img {
+                width: 100%;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 50%;
+                box-shadow: 0px 0px 3px #5f5f5f, 0px 0px 0px 5px #ecf0f3, 8px 8px 15px #a7aaa7, -8px -8px 15px #fff
+            }
+
+            .wrapper .name {
+                font-weight: 600;
+                font-size: 1.4rem;
+                letter-spacing: 1.3px;
+                padding-left: 10px;
+                color: #555
+            }
+
+            .wrapper .form-field input {
+                width: 100%;
+                display: block;
+                border: none;
+                outline: none;
+                background: none;
+                font-size: 1.2rem;
+                color: #666;
+                padding: 10px 15px 10px 10px
+            }
+
+            .wrapper .form-field {
+                padding-left: 10px;
+                margin-bottom: 20px;
+                border-radius: 20px;
+                box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff
+            }
+
+            .wrapper .form-field .fa {
+                color: #555
+            }
+
+            .wrapper .btn {
+                box-shadow: none;
+                width: 100%;
+                height: 40px;
+                background-color: #071b3c;
+                color: #fff;
+                border-radius: 25px;
+                box-shadow: 3px 3px 3px #b1b1b1, -3px -3px 3px #fff;
+                letter-spacing: 1.3px;
+            }
+
+            .wrapper .btn:hover {
+                background-color: #0d2e63;
+            }
+
+            .wrapper a {
+                text-decoration: none;
+                font-size: 0.8rem;
+                color: #071b3c;
+            }
+
+            .wrapper a:hover {
+                color: #0d2e63;
+            }
+
+            @media(max-width: 800px) {
+                .wrapper {
+                    margin: 30px 20px;
+                    padding: 40px 15px 15px 15px
+                }
+            }
+
+            @keyframes fadeInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(300px);
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="../css/main.css">
+        <!--===============================================================================================-->
+    </head>
+    <body id="login">
+        <div id="page-container">
+            <div id="content-wrap">
+                </br>
+                
+                <% if(msgs.length){%>
+                    <div style="position: fixed; right: 0px;" id="msgalert">
+                        <% if(msgs.toString().search("failed") !== -1){%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-danger alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%} else{%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-success alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%}%>
+                    </div>
+                <%}%>
+                </br>
+                
+                <div class="wrapper">
+                    <div class="logo">
+                        <a href="/"><img src="https://i.ibb.co/2PKZmfr/applogo.png" alt="applogo" border="0"></a> 
+                    </div>
+                    <div class="text-center mt-4 name"> Earth Share </div>
+                    <div class="row">
+                        <div class="col" style="border-right:1px dashed #000;height:auto;">
+                            <form class="p-3 mt-3" id="loginuser" role="form" method="POST" action="/user/login">
+                                <div class="form-field d-flex align-items-center"> 
+                                    <span class="fa fa-user"></span> 
+                                    <input type="text" name="loginuserName" id="loginuserName" placeholder="Username" required> 
+                                </div>
+                                <div class="form-field d-flex align-items-center"> 
+                                    <span class="fa fa-key"></span> 
+                                    <input type="password" name="loginpassword" id="loginpassword" placeholder="Password" required> 
+                                </div>
+                                <div class="d-flex align-items-center">  
+                                    <select style="margin: 10px auto; border: #ecf0f3 ;height: 50px; width: 200px; color: #555; background-color: #ecf0f3;" class=" btn form-select" name="lgntype" aria-label="Default select example" required>
+                                        <option selected disabled>Login Type</option>
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <button class="btn mt-3">Login</button>
+                            </form>
+                        </div>
+                        <div class="col" style="border-left:1px dashed #000;height:auto;">
+                            <form class="p-3 mt-3" id="signup" role="form" method="POST" action="/user/signup">
+                                <div class="form-field d-flex align-items-center"> 
+                                    <span class="fa fa-user"></span> 
+                                    <input type="text" name="signupuserName" id="signupuserName" placeholder="Username" required> 
+                                </div>
+                                <div class="form-field d-flex align-items-center"> 
+                                    <span class="fa fa-key"></span> 
+                                    <input type="password" name="signuppassword" id="signuppassword" placeholder="Password" required> 
+                                </div>
+                                <div class="form-field d-flex align-items-center"> 
+                                    <span class="fa fa-key"></span> 
+                                    <input type="password" name="signuprepassword" id="signuprepassword" placeholder="Re-Password" required> 
+                                </div> 
+                                <button class="btn mt-3">Signup</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

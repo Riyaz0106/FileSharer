@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %> 
+        <title>File Page - <%=fileData[0]["fileName"]%></title>
+
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <!-- Top Navigation Bar -->
+                <%- include('../partials/adminNavbar') %>
+                </br>
+                
+                <div class="container-fluid">
+                    <button type="submit" class="btn btn-primary btn-shadow" onclick="history.go(-1)">
+                        <span class="fa fa-arrow-left"></span>
+                    </button>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-auto me-auto">
+                                <div class="card btn-shadow bg-dark">
+                                    <div class="card-body">
+                                        <center>
+                                            <i id="thumbnail" style="font-size: 400px;"></i>
+                                        </center>
+                                    </div>
+                                </div>
+                                </br>
+                                
+                                <!--Dialoge Box-->
+		                        <%- include('../partials/dialogBox') %>
+                                
+                                <div style="align-items: center; justify-content: center;" class="row">
+                                    <div class="col-md-auto">
+                                        <!-- Button trigger Dialoge Box -->
+                                        <button type="button" class="btn btn-success btn-shadow" data-bs-toggle="modal" onclick="openModel(`<%= fileData[0]['fileHash']%>`,`<%= reqData[0]['reqType']%>`, `PUT`, `Approved`)">
+                                            <span class="fa fa-check"></span> Approve Request
+                                        </button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <!-- Button trigger Dialoge Box -->
+                                        <button type="button" class="btn btn-danger btn-shadow" data-bs-toggle="modal" onclick="openModel(`<%= fileData[0]['fileHash']%>`,`<%= reqData[0]['reqType']%>`, `PUT`, `Declined`)">
+                                            <span class="fa fa-times"></span> Decline Request
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="color: bisque;" class="col">
+                                <h2><%=fileData[0]["fileName"]%></h1>
+                                </br>
+                                Size: <h4 style="color: white;" id="filesize"></h4>
+                                </br>
+                                Current Status: 
+                                <% if(fileData[0]["fileStatus"] === 'Active'){%>
+                                    <h5 style="color: lightgreen;"><%= fileData[0]["fileStatus"] %></h5>
+                                <%} else{%>
+                                    <h5 style="color: rgb(238, 144, 144);"><%= fileData[0]["fileStatus"] %></h5>
+                                <%} %>
+                                </br>
+                                Uploaded By: <h5 style="color: white;"><%= fileData[0]["uploadBy"] %></h5>
+                                </br>
+                                Upload Date: <h5 style="color: white;" id="uploadDate"></h5>
+                                </br>
+                                Upload Time: <h5 style="color: white;" id="uploadTime"></h5>
+                                </br>
+                                <h5 style="color: yellow;">This file is been requested for 
+                                    <% if(reqData[0]['reqType'] === 'Activate'){%>
+                                        Activation.
+                                    <%} else{%>
+                                        Blocking.
+                                    <%}%>
+                                </h5>
+                                </br>
+                            </div>
+                        </div>
+
+                        <hr style="width:100%;text-align:left;margin-left:0;color: rgb(152, 192, 236);">
+                        <div class="row">
+                            
+                        </div>
+                        </br>
+                        <div class="row">
+                            <div class="col">
+                                <h4 style="color: beige;  font-weight: bold;">Request Reasons:</h4>
+                                </br>
+                                <%  var user = [];
+                                    reqData.forEach(function(row){
+                                        user.push(row["name"]);
+                                    });
+
+                                    user = user.filter(function(item, pos, self) {
+                                        return self.indexOf(item) == pos;
+                                    }) 
+                                %>
+                                <ul class="list-group">
+                                    <%  user.forEach(function(name){ %>
+                                    <a style="background-color: #212529; color: white;" class="btn-shadow list-group-item list-group-item-action justify-content-between align-items-center">
+                                        <div class="flex-column">
+                                            </br>
+                                            <div class="row">
+                                                <div class="col-auto">
+                                                    <img src="/images/user.png" class="img-fluid" style="height:4rem; width:4rem;" alt="quixote">
+                                                </div>
+                                                <div class="col-10">
+                                                    <div class="row">
+                                                        <h4 style="text-transform: capitalize; color: orangered;"><b><%=name%></b></h4>
+                                                    </div>
+                                                    </br>
+                                                    <%  reqData.forEach(function(row){
+                                                        if(name === row["name"]){ %>
+                                                        <div class="row">
+                                                            <div class="col-9">
+                                                                <p><b>Reason: </b><small><%=row["reason"]%></small></p>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <%  var date = new Date(row["reqDateTime"]);
+                                                                    reqDate = date.getDate()+"."+(date.getMonth()+1)+"."+date.getFullYear();
+                                                                    reqTime = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+                                                                %>
+                                                                <p>
+                                                                    <b>Date: </b><small><%=reqDate%></small>
+                                                                    <b>Time: </b><small><%=reqTime%></small>
+                                                                </p>
+                                                            </div> 
+                                                        </div>
+                                                        </br>
+                                                        <%  }                                            
+                                                    }); %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <%  }); %>
+                                </ul>
+                                </br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer-->
+            <%- include('../include/footer') %> 
+        </div>
+        <script text=javascript>
+            window.onload = function(){
+                const splitName = '<%=fileData[0]["fileName"]%>'.split('.');
+                getthumbnail(splitName[1]);
+
+                function getthumbnail(extn){
+                    var mclass;
+					const videos = ['WEBM','MPG','MP2','MPEG','MPE','MPV','OGG','MP4','M4P','M4V','AVI','WMV','MOV','QT','FLV','SWF','AVCHD'];
+					const images = ['JPG','PNG','GIF','WEBP','TIFF','PSD','RAW','BMP','HEIF','INDD'];
+                    const ppts 	 = ['ppt','pot','pps','ppa','ppam','pptx','pptm','potx','potm','ppam','ppsx','ppsm','sldx','sldm','pa'];
+                    const excels = ['xls','xlt','xlm','xll_','xla_','xla5','xla8','xlsx','xlsm','xltx','xltm','xlsb','xla','xlam','xll','xlw'];
+                    const words  = ['doc','dot','wbk','docx','docm','dotx','dotm','docb','wll','wwl'];
+                    const audios = ['3gp','aa','aac','aax','act','aiff','alac','amr','ape','au','awb','dss','dvf','flac','gsm','iklax','ivs','m4a',
+                                    'm4b','m4p','mmf','mp3','mpc','msv','nmf','ogg','oga','mogg','opus','ra','rm','raw','rf64','sln','tta','voc','vox','wav','wma','wv','webm','8svx','cda'];
+					
+                    if(splitName[1].toUpperCase() === 'TXT') {
+						mclass = 'fa fa-file-text';
+					} else if(splitName[1].toUpperCase() === 'PDF') {
+						mclass = 'fa fa-file-pdf-o';
+					} else if(splitName[1].toUpperCase() === 'ZIP') {
+						mclass = 'fa fa-file-archive-o';
+					} else if(videos.indexOf(splitName[1].toUpperCase()) !== -1 ){
+						mclass = 'fa fa-file-video-o';
+					} else if(audios.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-audio-o';
+					} else if(images.indexOf(splitName[1].toUpperCase()) !== -1 ){
+						mclass = 'fa fa-file-image-o';
+					} else if(ppts.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-powerpoint-o';
+					} else if(excels.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-excel-o';
+					} else if(words.indexOf(splitName[1]) !== -1 ){
+						mclass = 'fa fa-file-word-o';
+					} else{
+						mclass = 'fa fa-file';
+					}
+                    document.getElementById('thumbnail').setAttribute('class', mclass);
+                }
+
+                const formatBytes = (bytes, decimals = 2) => {
+					if (bytes === 0) {
+						return '0 Bytes';
+					}
+					const k = 1024;
+					const dm = decimals < 0 ? 0 : decimals;
+					const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+					const i = Math.floor(Math.log(bytes) / Math.log(k));
+					return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+				}
+
+                function getDate(timestamp){
+                    var date = new Date(timestamp);
+                    return date.getDate()+"."+(date.getMonth()+1)+"."+date.getFullYear(); 
+                }
+
+				function getTime(timestamp){
+                    var date = new Date(timestamp);
+                    return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+                }
+
+				document.getElementById('filesize').innerHTML = formatBytes(parseInt('<%= fileData[0]["fileSize"]%>'));
+				document.getElementById('uploadDate').innerHTML = getDate('<%= fileData[0]["uploadDateTime"]%>');
+				document.getElementById('uploadTime').innerHTML = getTime('<%= fileData[0]["uploadDateTime"]%>');
+
+                document.getElementById("navbarColor01").style.visibility = "visible";
+                document.getElementById('linkpendreq').className = 'nav-link active';
+                document.getElementById('linkhome').className = 'nav-link';
+                document.getElementById('linkcomreq').className = 'nav-link';
+
+                footLink = document.getElementById("mlink");
+                footLink.href = "/admin/pendingRequests";
+                footLink.innerHTML = 'Pending Requests';
+
+            }
+
+            function openModel(fileHash, reqType, action, state) {
+                const dialogBoxmodel = document.getElementById('dialogBoxmodel');
+                var myModal = new bootstrap.Modal(dialogBoxmodel, {});
+                myModal.show();
+
+                    const modalFooterForm = document.getElementById('dialogForm')
+                    const modalFooterFormInput = document.getElementById('dialogFormInput')
+                    const getHTag = document.querySelector('.modal-body p');
+
+                    if (state === 'Approved') {
+                        getHTag.innerHTML = '<span style="color: black;" class="fa fa-info-circle"></span> Are you sure you want to approve the request?';
+                    } else {
+                        getHTag.innerHTML = '<span style="color: black;" class="fa fa-info-circle"></span> Are you sure you want to decline the request?';
+                    }
+                    
+                    modalFooterForm.action = '/admin/requests/file/id='+fileHash+'/state='+state+'?reqType='+reqType+'&_method='+action;
+                    modalFooterFormInput.value = action;
+            }
+        </script>
+    </body>
+</html>

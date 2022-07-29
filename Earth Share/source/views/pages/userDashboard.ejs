@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %> 
+        <title>Home Page</title>
+        <link rel="stylesheet" type="text/css" href="../../css/main.css">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <!-- Top Navigation Bar -->
+                <%- include('../partials/userNavbar') %>
+                </br>
+
+                <% if(msgs.length){%>
+                    <div style="position: fixed; right: 0px;" id="msgalert">
+                        <% if(msgs.toString().search("failed") !== -1){%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-danger alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%} else{%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-success alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%}%>
+                    </div>
+                <%}%>
+                </br>
+
+                <div class="container-fluid">
+                    <center>
+                        <h1>Welcome, <%= user%></h1>
+                    </center>
+                </div>
+            </div>
+        <!--Footer-->
+        <%- include('../include/footer') %>
+        </div>
+        
+        <script text=javascript>
+            window.onload = function(){
+                document.getElementById("navbarColor01").style.visibility = "visible";
+                document.getElementById('linkuploadfile').className = 'nav-link';
+                document.getElementById('linkhome').className = 'nav-link active';
+                document.getElementById('linkallfiles').className = 'nav-link';
+            }
+        </script>
+    </body>
+</html>

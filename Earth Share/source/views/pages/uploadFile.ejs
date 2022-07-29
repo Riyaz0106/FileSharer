@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %> 
+        <title>Upload File Page</title>
+        <link rel="stylesheet" type="text/css" href="../../css/main.css">
+        <link rel="stylesheet" href="../../css/style.css">
+        <link rel="stylesheet" type="text/css" href="../../css/util.css">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <!-- Top Navigation Bar -->
+                <%- include('../partials/userNavbar') %>
+                </br>
+
+                <div style="position: fixed; right: 0px;" id="msgalert">
+                    
+                </div>
+                </br>
+                
+                <div class="wrapper">
+                    <header id="header">Upload Files</header>
+                    <form id="upform" action="#">
+                      <input id="uploadfile" class="file-input" type="file" name="uploadfile" hidden>
+                      <i class="fa fa-cloud-upload fs-50"></i>
+                      <p>Browse File to Upload</p>
+                    </form>
+                    <section id="section" style="color: black;" class="progress-area"></section>
+                    <section id="section" style="color: black;" class="uploaded-area"></section>
+                </div>
+            </div>
+        <!--Footer-->
+        <%- include('../include/footer') %>
+        </div>
+        
+        <script text=javascript>
+            window.onload = function(){
+                document.getElementById("navbarColor01").style.visibility = "visible";
+                document.getElementById('linkuploadfile').className = 'nav-link active';
+                document.getElementById('linkhome').className = 'nav-link';
+                document.getElementById('linkallfiles').className = 'nav-link';
+            }
+        </script>
+        <script src="/js/script.js"></script>
+    </body>
+</html>

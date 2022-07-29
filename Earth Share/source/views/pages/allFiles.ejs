@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %> 
+        <title>All Files Page</title>
+        <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="/vendor/perfect-scrollbar/perfect-scrollbar.css">
+        <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="/css/util.css">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <!-- Top Navigation Bar -->
+                <%- include('../partials/userNavbar') %>
+                </br>
+
+                <div style="position: fixed; right: 0px;" id="msgalert">
+                    <% if(msgs.length){%>
+                        <% if(msgs.toString().search("failed") !== -1){%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-danger alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%} else{%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-success alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%}%>
+                    <%}%>
+                </div>
+                </br></br></br>
+
+                <div class="container-fluid">
+                    <div class="table100 ver3">
+                        <div class="table100-head">
+                            <table>
+                                <thead>
+                                <tr class="row100 head">
+                                    <th class="cell100 column0">#</th>
+                                    <th class="cell100 column1">File Name</th>
+                                    <th class="cell100 column2">File Size</th>
+                                    <th class="cell100 column3">File Status</th>
+                                    <th class="cell100 column4">Download Links</th>
+                                    <th class="cell100 column5">Uploaded Date</th>
+                                    <th class="cell100 column6">Uploaded Time</th>
+                                    <th class="cell100 column7">Actions</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+            
+                        <div class="table100-body js-pscroll">
+                            <table>
+                                <tbody>
+                                    <%  if (allFilesdata.length !== 0){
+                                            var i=1; 
+                                            allFilesdata.forEach(function(row){
+                                                const formatBytes = (bytes, decimals = 2) => {
+                                                    if (bytes === 0) {
+                                                        return '0 Bytes';
+                                                    }
+                                                    const k = 1024;
+                                                    const dm = decimals < 0 ? 0 : decimals;
+                                                    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+                                                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                                                    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+                                                }
+                                                var timestamp = row["uploadDateTime"];
+                                                var date = new Date(timestamp);
+                                                var upDate = date.getDate()+"."+(date.getMonth()+1)+"."+date.getFullYear();
+                                                var upTime = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+                                                
+                                    %>
+                                    <tr class="row100 body">
+                                        <td class="cell100 column0"><%=i%></td>
+                                        <td class="cell100 column1"><%=row["fileName"]%></td>
+                                        <td class="cell100 column2"> <%=formatBytes(parseInt(row["fileSize"]))%></td>
+                                        <% if(row["fileStatus"] === "Blocked"){%>
+                                            <td style="color: red;" class="cell100 column3"><%=row["fileStatus"]%></td>
+                                        <%} else{%>
+                                            <td class="cell100 column3"><%=row["fileStatus"]%></td>
+                                        <%}%>
+                                        <td class="cell100 column4">
+                                            <a style="color: rgb(162, 112, 13);" href='http://localhost:5000/get/file/id=<%=row["fileHash"]%>'> http://localhost:5000/get/file/id=<%=row["fileHash"]%>
+                                            </a>
+                                        </td>
+                                        <td class="cell100 column5"><%=upDate%></td>
+                                        <td class="cell100 column6"><%=upTime%></td>
+                                        <td class="cell100 column7">
+
+                                            <!-- Button trigger Dialoge Box -->
+                                            <button type="button" class="btn btn-danger btn-shadow" data-bs-toggle="modal" onclick="openModel(`<%= row['fileHash']%>`,`DELETE`)">
+                                                <span class="fa fa-trash"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <%      i+=1;
+                                            });
+                                        } else { %>
+                                            <tr class="row100 body">
+                                                <td class="cell100 column0">
+                                                    <h5>0 Files uploaded</h5>
+                                                </td>
+                                            </tr>
+                                    <%  } %> 
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Dialoge Box-->
+                        <%- include('../partials/dialogBox') %>
+                    </div>
+                </div>
+            </div>
+
+        <!--Footer-->
+        <%- include('../include/footer') %>
+        </div>
+        <!--===============================================================================================-->
+        <script src="/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+        <!--===============================================================================================-->
+        
+        <script text=javascript>
+            window.onload = function(){
+                document.getElementById("navbarColor01").style.visibility = "visible";
+                document.getElementById('linkuploadfile').className = 'nav-link';
+                document.getElementById('linkhome').className = 'nav-link';
+                document.getElementById('linkallfiles').className = 'nav-link active';
+
+                $('.js-pscroll').each(function(){
+                    var ps = new PerfectScrollbar(this);
+            
+                    $(window).on('resize', function(){
+                    ps.update();
+                    })
+                });
+            }
+
+            function openModel(fileHash, action) {
+                
+                const dialogBoxmodel = document.getElementById('dialogBoxmodel');
+                var myModal = new bootstrap.Modal(dialogBoxmodel, {});
+                myModal.show();
+
+
+                const modalFooterForm = document.getElementById('dialogForm')
+                const modalFooterFormInput = document.getElementById('dialogFormInput')
+                const getHTag = document.querySelector('.modal-body p');
+
+                getHTag.innerHTML = '<span style="color: black;" class="fa fa-info-circle"></span> Are you sure you want to delete the request?';
+                // modalBodyPTag.innerHTML = 'Are you sure you want to delete the request?';
+                modalFooterForm.action = '/delete/file/id='+fileHash+'?_method='+action;
+                modalFooterFormInput.value = action;
+            }
+        </script>
+
+        <!--===============================================================================================-->
+        <script src="/js/main.js"></script>
+        <!--===============================================================================================-->
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Header-->
+        <%- include('../include/header') %> 
+        <title>Pending Requests Page</title>
+        <link rel="stylesheet" type="text/css" href="../../css/main.css">
+        <link rel="stylesheet" type="text/css" href="../../css/util.css">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <!-- Top Navigation Bar -->
+                <%- include('../partials/adminNavbar') %>
+                </br>
+                
+                <% if(msgs.length){%>
+                    <div style="position: fixed; right: 0px;" id="msgalert">
+                        <% if(msgs.toString().search("failed") !== -1){%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-danger alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%} else{%>
+                            <div style="animation: fadeInRight 1s ease-in-out;" class="alert alert-success alert-dismissible" role="alert">
+                                <%=msgs%>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        <%}%>
+                    </div>
+                <%}%>
+                </br>
+
+                <div class="container-fluid">
+                    <!-- View Films-->
+                    <%- include('../partials/viewPendingrequests') %>
+                </div>
+            </div>
+        <!--Footer-->
+        <%- include('../include/footer') %>
+        </div>
+        <script text=javascript>
+            window.onload = function(){
+                document.getElementById("navbarColor01").style.visibility = "visible";
+                document.getElementById('linkpendreq').className = 'nav-link active';
+                document.getElementById('linkhome').className = 'nav-link';
+                document.getElementById('linkcomreq').className = 'nav-link';
+
+                footLink = document.getElementById("mlink");
+                footLink.href = "/admin/pendingRequests";
+                footLink.innerHTML = 'Pending Requests';
+
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                })
+            }
+
+            function openModel(fileHash, reqType, action, state) {
+                const dialogBoxmodel = document.getElementById('dialogBoxmodel');
+                var myModal = new bootstrap.Modal(dialogBoxmodel, {});
+                myModal.show();
+
+                    const modalFooterForm = document.getElementById('dialogForm')
+                    const modalFooterFormInput = document.getElementById('dialogFormInput')
+                    const getHTag = document.querySelector('.modal-body p');
+
+                    if (state === 'Approved') {
+                        getHTag.innerHTML = '<span style="color: black;" class="fa fa-info-circle"></span> Are you sure you want to approve the request?';
+                    } else {
+                        getHTag.innerHTML = '<span style="color: black;" class="fa fa-info-circle"></span> Are you sure you want to decline the request?';
+                    }
+                    
+                    modalFooterForm.action = '/admin/requests/file/id='+fileHash+'/state='+state+'?reqType='+reqType+'&_method='+action;
+                    modalFooterFormInput.value = action;
+            }
+            
+        </script>
+    </body>
+</html>
